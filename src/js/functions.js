@@ -5,6 +5,15 @@ import { refs } from './refs';
 import { renderGalleryMarkup } from './card';
 import { fetchImages } from './pixabay';
 
+Notiflix.Notify.init({
+ width: '290px',
+ position: 'right-top',
+ cssAnimationStyle: 'zoom',
+ cssAnimationDuration: 450,
+ distance: '10px',
+ opacity: 0.9,
+});
+
 const lightbox = new SimpleLightbox('.gallery a');
 
 const hideBtnLoadMore = () => (refs.loadMoreBtn.style.display = 'none');
@@ -25,9 +34,7 @@ export async function onFormSubmit(e) {
 
   if (request === '') {
     hideBtnLoadMore();
-    return Notiflix.Notify.failure(
-      'Sorry, there are no images matching your search query. Please try again.'
-    );
+    return Notiflix.Notify.failure( 'Oops... The field cannot be empty.');
   }
 
   try {
@@ -39,11 +46,11 @@ export async function onFormSubmit(e) {
       Notiflix.Notify.failure(
         'Sorry, there are no images matching your search query. Please try again.'
       );
-    } else if (totalPages >= 1 && totalPages < 40) {
-      hideBtnLoadMore();
-      Notiflix.Notify.success(`Hooray! We found ${totalPages} image.`);
     } else if (totalPages > 40) {
       showBtnLoadMore();
+      Notiflix.Notify.success(`Hooray! We found ${totalPages} image.`);
+    } else if (totalPages >= 1 && totalPages < 40) {
+      hideBtnLoadMore();
       Notiflix.Notify.success(`Hooray! We found ${totalPages} image.`);
     }
     renderGalleryMarkup(gallery.data.hits);
